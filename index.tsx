@@ -9,7 +9,7 @@ const headerClass = css`
 const App = () => (
   <>
     <Style />
-    <span className={headerClass}>Hello world!</span>
+    <span className={headerClass}>eH2</span>
   </>
 );
 
