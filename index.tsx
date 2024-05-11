@@ -1,19 +1,52 @@
-import { css, Style } from "hono/css";
 import { Hono } from "hono";
+import { createBunWebSocket } from "hono/bun";
 
-const headerClass = css`
-  color: white;
-  background-color: blue;
-`;
-
-const App = () => (
-  <>
-    <Style />
-    <span className={headerClass}>eH2</span>
-  </>
-);
+const { upgradeWebSocket, websocket } = createBunWebSocket();
 
 const app = new Hono();
-app.get("/", (c) => c.render(<App />));
 
-export default app;
+app.get("/", (c) => {
+  return c.html(
+    <html>
+      <head>
+        <meta charset="UTF-8" />
+      </head>
+      <body>
+        <div id="now-time"></div>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+        const ws = new WebSocket('ws://localhost:3000/ws')
+        const $nowTime = document.getElementById('now-time')
+        ws.onmessage = (event) => {
+          $nowTime.textContent = event.data
+        }
+        `,
+          }}
+        ></script>
+      </body>
+    </html>
+  );
+});
+
+const ws = app.get(
+  "/ws",
+  upgradeWebSocket((c) => {
+    let intervalId: ReturnType<typeof setInterval>;
+    return {
+      onOpen(_event, ws) {
+        intervalId = setInterval(() => {
+          ws.send(new Date().toString());
+        }, 200);
+      },
+      onClose() {
+        clearInterval(intervalId);
+      },
+    };
+  })
+);
+
+Bun.serve({
+  fetch: app.fetch,
+  websocket,
+});
