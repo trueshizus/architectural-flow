@@ -19,7 +19,7 @@ const services = [
 function App() {
   return (
     <>
-      <h1>Achitectural Flow</h1>
+      <h1 className="text-3xl font-bold underline">Achitectural Flow</h1>
 
       {services.map((service) => (
         <ServiceDisplay
