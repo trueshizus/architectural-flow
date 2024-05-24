@@ -3,15 +3,21 @@ import { NodeData } from "./App";
 
 function CustomNode({ data }: { data: NodeData }) {
   return (
-    <article className="border-solid border-stone-500">
-      <section className="text-xl font-bold bg-stone-500 text-white">
-        {data.name}
-      </section>
-      <div className="">{data.description}</div>
-      test
+    <main className="border-solid border-gray-700 border-2 p-2 px-4">
+      <h1 className="text-xl  py-1 font-bold">{data.name}</h1>
+      <p className="">{data.description}</p>
+      {data.resources && (
+        <ul>
+          {Object.entries(data.resources).map(([key, value]) => (
+            <li key={key}>
+              {key}: {value.name}
+            </li>
+          ))}
+        </ul>
+      )}
       <Handle type="target" position={Position.Top} />
       <Handle type="source" position={Position.Bottom} />
-    </article>
+    </main>
   );
 }
 

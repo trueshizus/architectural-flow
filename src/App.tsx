@@ -10,33 +10,63 @@ import ReactFlow, {
 import "reactflow/dist/style.css";
 import CustomNode from "./custom-node";
 
-export type NodeData = {
-  name: string;
-  type?: string;
-  description: string;
-};
-
 const initialNodes = [
   {
     id: "1",
     position: { x: 0, y: 0 },
     data: {
-      name: "Authentication",
-      type: "textUpdater",
+      name: "authentication",
       description: "Handles user authentication and authorization.",
+
+      instances: {
+        provider: "aws",
+        region: "us-east-1",
+        runtime: "nodejs14.x",
+        memory: 512,
+        timeout: 30,
+      },
+      resources: {
+        storage: {
+          type: "database",
+          name: "users",
+        },
+        topics: {
+          type: "pubsub",
+          name: "auth",
+        },
+      },
     },
     type: "customNode",
   },
   {
     id: "2",
-    position: { x: 0, y: 100 },
+    position: { x: 0, y: 200 },
     data: {
-      name: "Data",
+      name: "data",
       description: "Handles data storage and retrieval.",
+      instances: {
+        provider: "aws",
+        region: "us-east-1",
+        runtime: "nodejs14.x",
+        memory: 512,
+        timeout: 30,
+      },
+      resources: {
+        storage: {
+          type: "database",
+          name: "users",
+        },
+        topics: {
+          type: "pubsub",
+          name: "auth",
+        },
+      },
     },
     type: "customNode",
   },
 ];
+
+export type NodeData = (typeof initialNodes)[number]["data"];
 
 const initialEdges = [{ id: "e1-2", source: "1", target: "2" }];
 
